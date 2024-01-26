@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "854716496772",
+    "project_id": "myeiksagar-c1009",
+    "storage_bucket": "myeiksagar-c1009.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854716496772:android:0c9580ee7c2c8e1a603bd1",
+        "android_client_info": {
+          "package_name": "com.example.helper"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAd84UQRPbmwbY4IeUTFSx24XWXaF6zdfE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
