@@ -55,6 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
       // Check if the key already exists
       DocumentSnapshot doc = await firestore.collection('data').doc(key).get();
       if (doc.exists) {
+        myanmar.clear();
+        myeik.clear();
         // Show error dialog and return from the function
         await showAlarmDialog(
             context, 'Data with key "$key" already exists!', true);
