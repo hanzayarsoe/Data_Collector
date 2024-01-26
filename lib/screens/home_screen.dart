@@ -142,8 +142,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           borderRadius: BorderRadius.circular(15),
                         ),
                         padding: const EdgeInsets.symmetric(
-                            vertical: 20, horizontal: 20),
-                        textStyle: const TextStyle(fontSize: 16),
+                            vertical: 15, horizontal: 15),
+                        textStyle: const TextStyle(fontSize: 14),
                       ),
                       child: const Text(
                         'Submit',
