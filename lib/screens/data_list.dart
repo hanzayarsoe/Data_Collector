@@ -52,7 +52,10 @@ class _DataListState extends State<DataList> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -66,7 +69,10 @@ class _DataListState extends State<DataList> {
 
                 Navigator.of(context).pop();
               },
-              child: const Text('Update'),
+              child: const Text(
+                'Update',
+                style: TextStyle(color: Colors.deepOrange),
+              ),
             ),
           ],
         );
@@ -107,7 +113,7 @@ class _DataListState extends State<DataList> {
                     leading: Padding(
                       padding: const EdgeInsets.only(right: 20),
                       child: Text(
-                        currntRow.toString(),
+                        '$currntRow.',
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ), // Leading row number
@@ -133,6 +139,8 @@ class _DataListState extends State<DataList> {
                   ),
                   const Divider(
                     height: 1,
+                    thickness: 1,
+                    color: Color.fromARGB(192, 204, 62, 51),
                   ),
                 ],
               );

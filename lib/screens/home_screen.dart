@@ -57,12 +57,28 @@ class _MyHomePageState extends State<MyHomePage> {
           context, 'Please enter both Myanmar and Myeik', true);
       return;
     }
+
     try {
+      // Show circular loading indicator while processing
+      showDialog(
+        context: context,
+        barrierDismissible: false, // Prevent dismissal by tapping outside
+        builder: (BuildContext context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
+
       // Check if the key already exists
       DocumentSnapshot doc = await firestore.collection('data').doc(key).get();
       if (doc.exists) {
+        // Hide the loading indicator
+        Navigator.pop(context);
+
         myanmar.clear();
         myeik.clear();
+
         // Show error dialog and return from the function
         await showAlarmDialog(
             context, 'Data with key "$key" already exists!', true);
@@ -71,12 +87,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
       // If the key doesn't exist, proceed with storing the data
       await firestore.collection('data').doc(key).set({'value': value});
+
+      // Hide the loading indicator
+      Navigator.pop(context);
+
       // Show success message with dialog
       await showAlarmDialog(context, 'Data submitted successfully!', false);
+
       // Clear fields and reset state
       myanmar.clear();
       myeik.clear();
     } catch (error) {
+      // Hide the loading indicator
+      Navigator.pop(context);
+
       // Show error message with dialog
       await showAlarmDialog(context, 'Error submitting data: $error', true);
     }
@@ -127,6 +151,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextField(
+                          style: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.bodySmall?.color),
                           controller: myanmar,
                           decoration: InputDecoration(
                             labelText: 'Myanmar',
@@ -146,6 +173,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         const SizedBox(height: 20),
                         TextField(
+                          style: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.bodySmall?.color),
                           controller: myeik,
                           decoration: InputDecoration(
                             labelText: 'Myeik',
