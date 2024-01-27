@@ -1,9 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:helper/firebase_options.dart';
-import 'package:helper/screens/data_list.dart';
 import 'package:helper/screens/home_screen.dart';
-import 'package:helper/screens/login_screen.dart';
 import 'package:helper/screens/theme_provider.dart';
 import 'package:provider/provider.dart';
 
