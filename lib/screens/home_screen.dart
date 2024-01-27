@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:helper/screens/data_list.dart';
+import 'package:helper/screens/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -17,7 +19,11 @@ Future<void> showAlarmDialog(
     barrierDismissible: false, // Prevent dismissal by tapping outside
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text(isError ? 'Error' : 'Success'),
+        title: Text(
+          isError ? 'Error' : 'Success',
+          style:
+              TextStyle(color: Theme.of(context).textTheme.titleLarge?.color),
+        ),
         content: Text(message),
         actions: [
           ElevatedButton(
@@ -89,80 +95,113 @@ class _MyHomePageState extends State<MyHomePage> {
       // Modern background color
       appBar: AppBar(
         leading: const Icon(Icons.folder_copy_outlined),
-        title: const Text(
+        title: Text(
           "Data Converter",
-          style: TextStyle(
-            fontSize: 16,
-          ),
+          style: Theme.of(context).textTheme.titleLarge,
         ),
-        centerTitle: false, // Vibrant app bar color
+        centerTitle: false,
+        actions: [
+          (_selectedIndex == 0)
+              ? IconButton(
+                  onPressed: () {
+                    Provider.of<ThemeProvider>(context, listen: false)
+                        .toggleDarkMode();
+                  },
+                  icon: const Icon(Icons.dark_mode_outlined))
+              : IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const MyHomePage()));
+                  },
+                  icon: const Icon(Icons.arrow_back_rounded)),
+        ], // Vibrant app bar color
       ),
       body: (_selectedIndex == 0)
           ? Center(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24), // Add padding
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextField(
-                      controller: myanmar,
-                      decoration: InputDecoration(
-                        labelText: 'Myanmar',
-                        labelStyle: TextStyle(color: Colors.grey[700]),
-                        filled: true,
-                        fillColor:
-                            Colors.blue[50], // Lighter blue for text field
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide.none,
+              child: SingleChildScrollView(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24), // Add padding
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextField(
+                          controller: myanmar,
+                          decoration: InputDecoration(
+                            labelText: 'Myanmar',
+                            labelStyle: TextStyle(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.color),
+                            filled: true,
+                            fillColor:
+                                Colors.blue[50], // Lighter blue for text field
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    TextField(
-                      controller: myeik,
-                      decoration: InputDecoration(
-                        labelText: 'Myeik',
-                        labelStyle: TextStyle(color: Colors.grey[700]),
-                        filled: true,
-                        fillColor: Colors.blue[50],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide.none,
+                        const SizedBox(height: 20),
+                        TextField(
+                          controller: myeik,
+                          decoration: InputDecoration(
+                            labelText: 'Myeik',
+                            labelStyle: TextStyle(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.color),
+                            filled: true,
+                            fillColor: Colors.blue[50],
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: handleSubmit,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue[800],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
+                        const SizedBox(height: 25),
+                        ElevatedButton(
+                          onPressed: handleSubmit,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue[800],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 15),
+                            textStyle: const TextStyle(fontSize: 16),
+                          ),
+                          child: const Text(
+                            'Submit',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 15),
-                        textStyle: const TextStyle(fontSize: 14),
-                      ),
-                      child: const Text(
-                        'Submit',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             )
           : const DataList(),
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Theme.of(context).appBarTheme.iconTheme?.color,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(
+              Icons.home,
+              size: 28,
+            ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.book_outlined), label: 'Data Lists'),
+              icon: Icon(
+                Icons.book_outlined,
+                size: 28,
+              ),
+              label: 'Data Lists'),
         ],
         currentIndex: _selectedIndex, // Keep track of current page
         onTap: _onItemTapped,

@@ -16,7 +16,10 @@ class LoginPage extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Colors.blue, Colors.purple],
+            colors: [
+              Color.fromRGBO(189, 159, 199, 1),
+              Color.fromRGBO(44, 62, 80, 1)
+            ],
           ),
         ),
         child: Center(
@@ -101,7 +104,8 @@ class LoginPage extends StatelessWidget {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 18, vertical: 10),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -110,9 +114,17 @@ class LoginPage extends StatelessWidget {
                         'Login',
                         style: TextStyle(
                           color: Colors.blue,
-                          fontSize: 16,
+                          fontSize: 18,
                         ),
                       )),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Developed by: hzys',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontStyle: FontStyle.italic),
+                  )
                 ],
               ),
             ),

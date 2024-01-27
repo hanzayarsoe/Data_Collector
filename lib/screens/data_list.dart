@@ -9,8 +9,6 @@ class DataList extends StatefulWidget {
 }
 
 class _DataListState extends State<DataList> {
-  int rowIndex = 1;
-
   void _showEditDialog(String currentKey, String currentValue) {
     TextEditingController keyController =
         TextEditingController(text: currentKey);
@@ -32,8 +30,7 @@ class _DataListState extends State<DataList> {
             children: [
               TextField(
                 enabled: false,
-                style:
-                    const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.titleSmall,
                 controller: keyController,
                 decoration: const InputDecoration(helperText: 'Myanmar'),
               ),
@@ -41,7 +38,7 @@ class _DataListState extends State<DataList> {
                 height: 8,
               ),
               TextField(
-                style: const TextStyle(fontSize: 14),
+                style: Theme.of(context).textTheme.bodySmall,
                 controller: valueController,
                 decoration: const InputDecoration(helperText: 'Myeik'),
               ),
@@ -102,34 +99,31 @@ class _DataListState extends State<DataList> {
           return ListView.builder(
             itemCount: dataList.length,
             itemBuilder: (context, index) {
-              int currentRowNumber = rowIndex++;
               MapEntry<String, dynamic> data = dataList[index];
-
-              const dataStyle = TextStyle(
-                fontSize: 14,
-              );
+              int currntRow = index + 1;
               return Column(
                 children: [
                   ListTile(
                     leading: Padding(
                       padding: const EdgeInsets.only(right: 20),
                       child: Text(
-                        currentRowNumber.toString(),
-                        style: dataStyle,
+                        currntRow.toString(),
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ), // Leading row number
                     title: Text(
                       data.key,
-                      style: dataStyle,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     subtitle: Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: Text(
                         data.value,
-                        style: dataStyle,
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ),
                     trailing: IconButton(
+                      color: Theme.of(context).appBarTheme.iconTheme?.color,
                       icon: const Icon(Icons.edit_note_rounded),
                       onPressed: () {
                         _showEditDialog(data.key, data.value);
