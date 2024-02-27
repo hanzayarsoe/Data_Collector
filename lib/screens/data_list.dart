@@ -71,7 +71,7 @@ class _DataListState extends State<DataList> {
               },
               child: const Text(
                 'Update',
-                style: TextStyle(color: Colors.deepOrange),
+                style: TextStyle(color: Color.fromARGB(185, 255, 86, 34)),
               ),
             ),
           ],
