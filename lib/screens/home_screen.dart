@@ -39,7 +39,7 @@ Future<void> showAlarmDialog(
   );
 
   // Close dialog after 2 seconds
-  await Future.delayed(const Duration(seconds: 3));
+  await Future.delayed(const Duration(seconds: 5));
   Navigator.pop(context);
 }
 
