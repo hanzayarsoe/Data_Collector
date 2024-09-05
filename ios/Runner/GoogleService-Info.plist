@@ -26,5 +26,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:854716496772:ios:d3d6b701d8501dcd603bd1</string>
+	<key>DATABASE_URL</key>
+	<string>https://myeiksagar-c1009-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>

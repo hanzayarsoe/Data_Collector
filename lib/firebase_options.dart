@@ -49,6 +49,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '854716496772',
     projectId: 'myeiksagar-c1009',
     authDomain: 'myeiksagar-c1009.firebaseapp.com',
+    databaseURL: 'https://myeiksagar-c1009-default-rtdb.firebaseio.com',
     storageBucket: 'myeiksagar-c1009.appspot.com',
   );
 
@@ -57,6 +58,7 @@ class DefaultFirebaseOptions {
     appId: '1:854716496772:android:0c9580ee7c2c8e1a603bd1',
     messagingSenderId: '854716496772',
     projectId: 'myeiksagar-c1009',
+    databaseURL: 'https://myeiksagar-c1009-default-rtdb.firebaseio.com',
     storageBucket: 'myeiksagar-c1009.appspot.com',
   );
 
@@ -65,6 +67,7 @@ class DefaultFirebaseOptions {
     appId: '1:854716496772:ios:d3d6b701d8501dcd603bd1',
     messagingSenderId: '854716496772',
     projectId: 'myeiksagar-c1009',
+    databaseURL: 'https://myeiksagar-c1009-default-rtdb.firebaseio.com',
     storageBucket: 'myeiksagar-c1009.appspot.com',
     iosBundleId: 'com.example.helper',
   );

@@ -9,6 +9,94 @@ class DataList extends StatefulWidget {
 }
 
 class _DataListState extends State<DataList> {
+  final ScrollController _scrollController = ScrollController();
+  final int _batchSize = 100;
+  List<MapEntry<String, dynamic>> _dataList = [];
+  bool _isLoading = false;
+  bool _hasMoreData = true;
+  DocumentSnapshot? _lastDocument;
+  int _documentCount = 0; // Document count variable
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchData(); // Load the first batch of data
+    _getDocumentCount(); // Get the total count of documents in the collection
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  // Function to fetch the total count of documents in the collection
+  Future<void> _getDocumentCount() async {
+    QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('data').get();
+    setState(() {
+      _documentCount = snapshot.docs.length; // Update the document count
+    });
+  }
+
+  // Function to fetch data from Firestore with pagination
+  Future<void> _fetchData() async {
+    if (_isLoading || !_hasMoreData) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    Query query = FirebaseFirestore.instance
+        .collection('data')
+        .orderBy(FieldPath.documentId)
+        .limit(_batchSize);
+
+    if (_lastDocument != null) {
+      query = query.startAfterDocument(_lastDocument!);
+    }
+
+    try {
+      QuerySnapshot snapshot = await query.get();
+
+      if (snapshot.docs.isNotEmpty) {
+        _lastDocument = snapshot.docs.last;
+        final newDataList = snapshot.docs.map((doc) {
+          return MapEntry(doc.id, doc['value']);
+        }).toList();
+
+        setState(() {
+          _dataList.addAll(newDataList);
+        });
+
+        // If the number of fetched documents is less than batch size, we have loaded all the data
+        if (snapshot.docs.length < _batchSize) {
+          _hasMoreData = false;
+        }
+      } else {
+        _hasMoreData = false; // No more data
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  // Function to detect when user scrolls to the end of the list
+  void _onScroll() {
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        !_isLoading &&
+        _hasMoreData) {
+      _fetchData();
+    }
+  }
+
+  // Show edit dialog when user clicks the edit button
   void _showEditDialog(String currentKey, String currentValue) {
     TextEditingController keyController =
         TextEditingController(text: currentKey);
@@ -83,71 +171,66 @@ class _DataListState extends State<DataList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('data').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Center(
-              child: Text('Error fetching data'),
-            );
-          }
-
-          if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          final dataList = snapshot.data!.docs.map((doc) {
-            return MapEntry(doc.id, doc['value']);
-          }).toList();
-
-          return ListView.builder(
-            itemCount: dataList.length,
-            itemBuilder: (context, index) {
-              MapEntry<String, dynamic> data = dataList[index];
-              int currntRow = index + 1;
-              return Column(
-                children: [
-                  ListTile(
-                    leading: Padding(
-                      padding: const EdgeInsets.only(right: 20),
-                      child: Text(
-                        '$currntRow.',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ), // Leading row number
-                    title: Text(
-                      data.key,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Text(
-                        data.value,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ),
-                    trailing: IconButton(
-                      color: Theme.of(context).appBarTheme.iconTheme?.color,
-                      icon: const Icon(Icons.edit_note_rounded),
-                      onPressed: () {
-                        _showEditDialog(data.key, data.value);
-                      },
-                    ),
-                    onTap: () {},
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: Color.fromARGB(192, 204, 62, 51),
-                  ),
-                ],
-              );
-            },
-          );
-        },
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(
+            'Total Data: $_documentCount'), // Show total document count in AppBar
+        centerTitle: true,
       ),
+      body: _dataList.isEmpty && !_isLoading
+          ? const Center(child: Text('No data available'))
+          : ListView.builder(
+              controller: _scrollController,
+              itemCount: _dataList.length + 1, // +1 for the loading indicator
+              itemBuilder: (context, index) {
+                if (index == _dataList.length) {
+                  // Show a circular progress indicator at the end of the list
+                  return _hasMoreData
+                      ? const Center(child: CircularProgressIndicator())
+                      : const SizedBox(); // No more data to load
+                }
+
+                MapEntry<String, dynamic> data = _dataList[index];
+                int currentRow = index + 1;
+
+                return Column(
+                  children: [
+                    ListTile(
+                      leading: Padding(
+                        padding: const EdgeInsets.only(right: 20),
+                        child: Text(
+                          '$currentRow.',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ),
+                      title: Text(
+                        data.key,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      subtitle: Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Text(
+                          data.value,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ),
+                      trailing: IconButton(
+                        color: Theme.of(context).appBarTheme.iconTheme?.color,
+                        icon: const Icon(Icons.edit_note_rounded),
+                        onPressed: () {
+                          _showEditDialog(data.key, data.value);
+                        },
+                      ),
+                    ),
+                    const Divider(
+                      height: 1,
+                      thickness: 1,
+                      color: Color.fromARGB(192, 204, 62, 51),
+                    ),
+                  ],
+                );
+              },
+            ),
     );
   }
 }

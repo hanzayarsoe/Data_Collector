@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:helper/firebase_options.dart';
 import 'package:helper/screens/home_screen.dart';
+import 'package:helper/screens/login_screen.dart';
 import 'package:helper/screens/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Data Collector',
       theme: Provider.of<ThemeProvider>(context).getCurrentTheme(),
-      home: const MyHomePage(),
+      home: const LoginPage(),
     );
   }
 }
