@@ -235,25 +235,39 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               )
             : const DataList(),
-        bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: Theme.of(context).appBarTheme.iconTheme?.color,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                size: 28,
+        bottomNavigationBar: Theme(
+          data: Theme.of(context).copyWith(
+            // Set the background color of the BottomNavigationBar
+            canvasColor: Theme.of(context).brightness == Brightness.dark
+                ? Colors.grey[900]
+                : Colors.white,
+          ),
+          child: BottomNavigationBar(
+            selectedItemColor: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.blue[800],
+            unselectedItemColor: Theme.of(context).brightness == Brightness.dark
+                ? Colors.grey[400]
+                : Colors.grey[600],
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.home,
+                  size: 28,
+                ),
+                label: 'Home',
               ),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
+              BottomNavigationBarItem(
                 icon: Icon(
                   Icons.book_outlined,
                   size: 28,
                 ),
-                label: 'Data Lists'),
-          ],
-          currentIndex: _selectedIndex, // Keep track of current page
-          onTap: _onItemTapped,
+                label: 'Data Lists',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            onTap: _onItemTapped,
+          ),
         ),
       ),
     );
